@@ -11,8 +11,12 @@ namespace BasicSpaceDude
 
         public static readonly Random RNG = new Random();
 
+        // Constants
+        const int NUMBEROFDUDES = 1000;
+
         // Class Variables
         Background bg;
+        Vector2 screenCenter;
 
         // Create a variable called "dudes" that is an array (collection) of
         // variables of type FloatyDude
@@ -28,7 +32,8 @@ namespace BasicSpaceDude
         protected override void Initialize()
         {
             // Specify that dudes has space for 100 dudes
-            dudes = new FloatyDude[1000];
+            dudes = new FloatyDude[NUMBEROFDUDES];
+            screenCenter = GraphicsDevice.Viewport.Bounds.Center.ToVector2();
 
             base.Initialize();
         }
@@ -41,8 +46,7 @@ namespace BasicSpaceDude
 
             for (int i = 0; i < dudes.Length; i++)
             {
-                Vector2 startPos = new Vector2(GraphicsDevice.Viewport.Bounds.Center.X + RNG.Next(-100, 100),
-                                                        GraphicsDevice.Viewport.Bounds.Center.Y + RNG.Next(-100, 100));
+                Vector2 startPos = screenCenter + new Vector2(RNG.Next(-100, 100),RNG.Next(-100, 100));
                 Vector2 startVel = new Vector2((float)(RNG.NextDouble() * 2) - 1,
                                                         (float)(RNG.NextDouble() * 2) - 1);
                 dudes[i] = new FloatyDude(Content.Load<Texture2D>("dude" + (i%6)), startPos, startVel);
@@ -52,9 +56,7 @@ namespace BasicSpaceDude
         protected override void Update(GameTime gameTime)
         {
             for (int i = 0; i < dudes.Length; i++)
-            {
                 dudes[i].UpdateMe(GraphicsDevice.Viewport.Bounds);
-            }
 
             base.Update(gameTime);
         }
@@ -67,9 +69,7 @@ namespace BasicSpaceDude
             bg.DrawMe(_spriteBatch);
 
             for (int i = 0; i < dudes.Length; i++)
-            {
                 dudes[i].DrawMe(_spriteBatch);
-            }
 
             _spriteBatch.End();
 
